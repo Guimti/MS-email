@@ -4,7 +4,9 @@ package com.microservices.email.controllers;
 import com.microservices.email.dtos.EmailDto;
 import com.microservices.email.models.EmailModel;
 import com.microservices.email.services.EmailService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,10 +22,10 @@ public class EmailController {
 
     @PostMapping("/sending-email")
     public ResponseEntity<EmailModel> sendingEmail(@RequestBody @Valid EmailDto emailDto){
+        EmailModel emmailModel =  new EmailModel();
+        BeanUtils.copyProperties(emailDto, emmailModel);
+        emailService.sendEmail(emmailModel);
+        return new ResponseEntity<>(emmailModel, HttpStatus.CREATED);
 
     }
-
-    }
-
-
 }
